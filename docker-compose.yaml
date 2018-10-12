@@ -1,14 +1,9 @@
 version: '2.0'
 
-networks:
- basic:
-
 services:
 
   blockchain-explorer:
     container_name: blockchain-explorer
-    networks:
-      - basic
     image: eluft84/blockchain-explorer
     # # wait-for-it waits until the mysql server is up and running
     command:  bash -c "./wait-for-it.sh -t 120 mysql-explorer:3306 -s -- node main.js"
@@ -16,7 +11,7 @@ services:
       # # Do not forget to update the config file based on your config 
       - ./config.json:/blockchain-explorer/config.json
       # # Do not forget to add your cryto files
-      - ./crypto-config:/blockchain-explorer/crypto-config
+      - /composer/crypto-config:/blockchain-explorer/crypto-config
     depends_on:
       - mysql-explorer
     ports:
@@ -24,8 +19,6 @@ services:
  
   mysql-explorer:
     container_name: mysql-explorer
-    networks:
-      - basic
     image: mysql/mysql-server:latest
     restart: always
     environment:
